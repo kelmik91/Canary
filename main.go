@@ -9,6 +9,7 @@ import (
 	"net/url"
 	"os"
 	"regexp"
+	"strings"
 	"time"
 )
 
@@ -24,26 +25,31 @@ func init() {
 	}
 	token := os.Getenv("BOT_TOKEN")
 
+	projectName := url.QueryEscape(os.Getenv("PROJECT_NAME") + "\n")
+
 	logPath = os.Getenv("LOG_PATH")
 	logFile = os.Getenv("LOG_FILE")
 
 	myID := os.Getenv("MY_ID")
 	groupID := os.Getenv("GROUP_ID")
 
-	tgGroup = "https://api.telegram.org/bot" + token + "/sendMessage?chat_id=" + groupID + "&text="
-	tgMy = "https://api.telegram.org/bot" + token + "/sendMessage?chat_id=" + myID + "&text="
+	tgGroup = "https://api.telegram.org/bot" + token + "/sendMessage?chat_id=" + groupID + "&text=" + projectName
+	tgMy = "https://api.telegram.org/bot" + token + "/sendMessage?chat_id=" + myID + "&text=" + projectName
 }
 
 func main() {
 	ch := make(chan string)
-	fileIn := os.Args[1]
-	if fileIn != "" {
-		logFile = fileIn
-	}
+	//fileIn := os.Args[1]
+	//if fileIn != "" {
+	//	logFile = fileIn
+	//}
 
 	go tail(logPath+logFile, ch)
 	for {
 		str := <-ch
+		if strings.Contains(str, " 301 ") {
+			continue
+		}
 		if errorRegexp, _ := regexp.MatchString(`\s5\d{2}\s`, str); errorRegexp {
 			fmt.Print(str)
 			str = url.QueryEscape(str)
