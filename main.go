@@ -13,6 +13,7 @@ import (
 	"time"
 )
 
+var projectName string
 var logPath string
 var logFile string
 var tgGroup string
@@ -25,31 +26,38 @@ func init() {
 	}
 	token := os.Getenv("BOT_TOKEN")
 
-	projectName := url.QueryEscape(os.Getenv("PROJECT_NAME") + "\n")
+	projectName = os.Getenv("PROJECT_NAME")
 
 	logPath = os.Getenv("LOG_PATH")
-	logFile = os.Getenv("LOG_FILE")
+	logFile = os.Getenv("LOG_ACCESS_FILE")
 
 	myID := os.Getenv("MY_ID")
 	groupID := os.Getenv("GROUP_ID")
 
-	tgGroup = "https://api.telegram.org/bot" + token + "/sendMessage?chat_id=" + groupID + "&text=" + projectName
-	tgMy = "https://api.telegram.org/bot" + token + "/sendMessage?chat_id=" + myID + "&text=" + projectName
+	tgGroup = "https://api.telegram.org/bot" + token + "/sendMessage?chat_id=" + groupID + "&text=" + url.QueryEscape(projectName+"\n")
+	tgMy = "https://api.telegram.org/bot" + token + "/sendMessage?chat_id=" + myID + "&text=" + url.QueryEscape(projectName+"\n")
 }
 
 func main() {
 	ch := make(chan string)
-	//fileIn := os.Args[1]
-	//if fileIn != "" {
-	//	logFile = fileIn
-	//}
 
-	go tail(logPath+logFile, ch)
+	go tail(logPath+projectName+logFile, ch)
 	for {
 		str := <-ch
 		if strings.Contains(str, " 301 ") {
 			continue
 		}
+		if strings.Contains(str, " 200 ") {
+			continue
+		}
+		//strSlice := strings.Split(str, " ")
+		//switch strSlice[3] {
+		//case "200":
+		//	continue
+		//case "301":
+		//	continue
+		//}
+
 		if errorRegexp, _ := regexp.MatchString(`\s5\d{2}\s`, str); errorRegexp {
 			fmt.Print(str)
 			str = url.QueryEscape(str)
@@ -112,6 +120,7 @@ func tail(filename string, out chan string) {
 		}
 		if time.Now().Day() != info.ModTime().Day() {
 			f.Close()
+			time.Sleep(time.Minute)
 			f, err = os.Open(filename)
 			if err != nil {
 				sendError(err)
