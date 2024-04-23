@@ -15,7 +15,7 @@ download:
 release:
 	env GOOS=linux GOARCH=amd64 go build -o ./bin/canary-linux ./cmd/client
 
-package:
+package-deb:
 	env GOOS=linux GOARCH=amd64 go build -o ./bin/canary-linux ./cmd/client
 	cp .env ./package/etc/canary/.config
 	cp ./bin/canary-linux ./package/usr/bin/canary-linux
