@@ -2,3 +2,4 @@
 .idea
 .env
 /package/etc/canary/.config
+/package/usr/bin/
