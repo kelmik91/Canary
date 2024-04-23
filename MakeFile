@@ -17,9 +17,9 @@ release:
 
 package-deb:
 	env GOOS=linux GOARCH=amd64 go build -o ./bin/canary-linux ./cmd/client
-	mkdir "./package/etc/canary"
+	mkdir -p "./package/etc/canary"
 	cp .env ./package/etc/canary/.config
-	mkdir "./package/usr/bin"
+	mkdir -p "./package/usr/bin"
 	cp ./bin/canary-linux ./package/usr/bin/canary-linux
 	dpkg-deb --build ./package
 	rm -f ./package/etc/canary/.config
