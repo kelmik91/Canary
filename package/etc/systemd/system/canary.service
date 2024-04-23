@@ -1,0 +1,9 @@
+[Unit]
+Description=Canary Description
+After=network.target
+[Service]
+Type=simple
+ExecStart=/usr/bin/canary-linux
+Restart=always
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+systemctl daemon-reload
+
+systemctl enable canary
+
+systemctl start canary

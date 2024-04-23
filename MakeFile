@@ -1,0 +1,22 @@
+
+
+build:
+	go build -race -o ./bin/control_errors ./cmd/client/main.go
+
+tidy:
+	go mod tidy
+
+clean:
+	rm -rf bin/control_errors
+
+download:
+	go mod download
+
+release:
+	env GOOS=linux GOARCH=amd64 go build -o ./bin/canary-linux ./cmd/client
+
+package:
+	env GOOS=linux GOARCH=amd64 go build -o ./bin/canary-linux ./cmd/client
+	cp .env ./package/etc/canary.config
+	cp ./bin/canary-linux ./package/usr/bin/canary-linux
+	dpkg-deb --build ./package

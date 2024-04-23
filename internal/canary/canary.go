@@ -3,7 +3,6 @@ package canary
 import (
 	"bufio"
 	"errors"
-	"fmt"
 	"io"
 	"main/internal/logger"
 	"os"
@@ -109,9 +108,6 @@ func Parse(str string) Canary {
 
 	re := regexp.MustCompile(`(\S+) (\S+) (\S+) \[([^:]+):(\d+:\d+:\d+) ([^\]]+)\] \"(\S+) (.*?) (\S+)\" (\S+) (\S+) (\".*?\") (\".*?\")`)
 	match := re.FindStringSubmatch(str)
-	for i, s := range match {
-		fmt.Println(i, s)
-	}
 
 	return Canary{
 		Method:     match[7],

@@ -1,0 +1,10 @@
+Package: Canary
+Version: 1.0
+Section: unknown
+Priority: optional
+Depends: bash
+Architecture: amd64
+Essential: no
+Installed-Size: 7352
+Maintainer: Kelmik91 <kelmik91@me.com>
+Description: Print hello from losst line

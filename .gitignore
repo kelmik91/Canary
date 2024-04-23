@@ -1,4 +1,4 @@
 /bin
-MakeFile
 .idea
 .env
+/package/etc/canary/.config

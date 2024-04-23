@@ -1,0 +1,11 @@
+#!/bin/bash
+
+mkdir -p '/var/www/fastuser/data/logs/'
+touch /var/www/fastuser/data/logs/resp.ru-backend.access.log
+
+#CONFIG_DIR='/etc/canary'
+#if [ ! -d '$CONFIG_DIR' ]; then
+#	mkdir -p '$CONFIG_DIR'
+#fi
+
+echo 'Hello from Canary installed'

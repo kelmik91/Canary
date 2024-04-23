@@ -9,7 +9,7 @@ import (
 )
 
 func SendServer(message string) {
-	if config.Server == "" {
+	if config.Server != "" {
 		request, err := http.NewRequest(http.MethodPost, config.Server, strings.NewReader(message))
 		if err != nil {
 			return
