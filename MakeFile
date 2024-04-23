@@ -21,6 +21,6 @@ package-deb:
 	cp .env ./package/etc/canary/.config
 	mkdir -p "./package/usr/bin"
 	cp ./bin/canary-linux ./package/usr/bin/canary-linux
-	dpkg-deb --build ./package
+	dpkg-deb --build ./package ./bin/Canary.deb
 	rm -f ./package/etc/canary/.config
 	rm -f ./package/usr/bin/canary-linux
