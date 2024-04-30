@@ -12,8 +12,8 @@ clean:
 download:
 	go mod download
 
-release:
-	env GOOS=linux GOARCH=amd64 go build -o ./bin/canary-linux ./cmd/client
+buildServer:
+	env GOOS=linux GOARCH=amd64 go build -o ./bin/canary-server ./cmd/server
 
 package-deb:
 	env GOOS=linux GOARCH=amd64 go build -o ./bin/canary-linux ./cmd/client
