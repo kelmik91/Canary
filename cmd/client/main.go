@@ -5,6 +5,7 @@ import (
 	"main/internal/canary"
 	"main/internal/config"
 	"main/internal/sendler"
+	"net/http"
 	"path/filepath"
 	"strings"
 )
@@ -12,7 +13,7 @@ import (
 func main() {
 	config.Config()
 
-	glob, err := filepath.Glob(config.Path + "*" + config.LogFileName)
+	glob, err := filepath.Glob(config.LogPath + "*" + config.LogFileName)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -39,18 +40,18 @@ func main() {
 
 		if found {
 			site := strings.TrimSuffix(s, config.LogFileName)
-			site = strings.TrimPrefix(site, config.Path)
+			site = strings.TrimPrefix(site, config.LogPath)
 			go canary.Tail(site, s, ch)
 		}
 	}
 
 	for {
 		str := <-ch
-		if str.StatusCode == "200" || str.StatusCode == "301" {
+		if str.StatusCode == http.StatusOK || str.StatusCode == http.StatusMovedPermanently {
 			continue
 		}
 
-		sendler.SendServer(str.Site + "\n" + str.StrLog)
+		sendler.SendServer(str.Site + "\n" + str.StrLogRaw)
 	}
 
 }
