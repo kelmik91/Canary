@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  deploy:
+  test_and_deploy:
     runs-on: ubuntu-latest
     if: github.event.action == 'closed' && github.event.pull_request.merged == true
     steps:
@@ -18,11 +18,19 @@ jobs:
         with:
           go-version: '1.22.2'
 
+      - name: Run tests
+        run: go test ./...
+
+      - name: Check test status
+        run: exit ${{ steps.test.outcome == 'success' && 0 || 1 }}
+
       - name: Build application
+        if: success()
         run: |
           bash build.sh
 
       - name: Deploy application
+        if: success()
         run: |
           bash deploy.sh
         env:
