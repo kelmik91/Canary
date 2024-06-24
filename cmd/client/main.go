@@ -13,7 +13,8 @@ import (
 func main() {
 	config.Config()
 
-	glob, err := filepath.Glob(config.LogPath + "*" + config.LogFileName)
+	//glob, err := filepath.Glob(config.LogPath + "*" + config.LogFileName)
+	glob, err := filepath.Glob("bin/" + "*" + config.LogFileName)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -51,7 +52,7 @@ func main() {
 			continue
 		}
 
-		sendler.SendServer(str.Site + "\n" + str.StrLogRaw)
+		sendler.SendServer(str.Site, str.StrLogRaw)
 	}
 
 }

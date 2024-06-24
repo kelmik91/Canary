@@ -5,6 +5,7 @@ import (
 	"io"
 	"main/internal/canary"
 	"main/internal/logger"
+	"main/internal/messages"
 	"net/http"
 	"os"
 )
@@ -33,10 +34,15 @@ func PostHandlerCanary(w http.ResponseWriter, r *http.Request) {
 		logger.Error(fmt.Errorf("server request method not allowed: %s", r.Method))
 		return
 	}
-	message := canary.Parse(string(body))
 
+	m := messages.Message{}
+	messageJSON, _ := m.Decode(body)
+	message := canary.Parse(messageJSON.Log)
+	fmt.Println(messageJSON.Site)
+	return
 	if message.StatusCode != http.StatusOK && message.Method == http.MethodGet {
-		response, err := http.Get("")
+		//TODO дописать проверку запроса
+		response, err := http.Get(messageJSON.Site)
 		if err != nil {
 			logger.Error(fmt.Errorf("request check status code failed: %s", err))
 			return
