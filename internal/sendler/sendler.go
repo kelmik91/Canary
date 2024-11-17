@@ -27,11 +27,11 @@ func SendServer(site, message string) {
 		response, err := client.Do(request)
 		if err != nil {
 			logger.SendError(err)
-			SendTg(message)
+			SendTg(site + " : " + message)
 		}
 		defer response.Body.Close()
 	} else {
-		SendTg(message)
+		SendTg(site + " : " + message)
 	}
 }
 
