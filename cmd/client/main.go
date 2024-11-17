@@ -13,8 +13,8 @@ import (
 func main() {
 	config.Config()
 
-	//glob, err := filepath.Glob(config.LogPath + "*" + config.LogFileName)
-	glob, err := filepath.Glob("bin/" + "*" + config.LogFileName)
+	glob, err := filepath.Glob(config.LogPath + "*" + config.LogFileName)
+	//glob, err := filepath.Glob("bin/" + "*" + config.LogFileName)
 	if err != nil {
 		log.Fatalln(err)
 	}

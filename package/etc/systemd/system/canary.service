@@ -3,7 +3,7 @@ Description=Canary Description
 After=network.target
 [Service]
 Type=simple
-ExecStart=/usr/bin/canary-linux
+ExecStart=/usr/bin/canary-client-linux
 Restart=always
 [Install]
 WantedBy=multi-user.target

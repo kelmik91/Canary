@@ -2,4 +2,5 @@
 .idea
 .env
 /package/etc/canary/.config
-/package/usr/bin/canary-linux
+/package/usr/bin/canary-client-linux
+/cmd/dev/*
