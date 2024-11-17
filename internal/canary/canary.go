@@ -7,15 +7,26 @@ import (
 	"main/internal/logger"
 	"os"
 	"regexp"
+	"strconv"
 	"time"
 )
 
 type Canary struct {
 	Site       string
+	Ip         string
+	Identity   string
+	User       string
+	Date       string
+	Time       string
+	Timezone   string
 	Method     string
 	URI        string
-	StatusCode string
-	StrLog     string
+	Protocol   string
+	StatusCode int
+	Bytes      string
+	Referer    string
+	Agent      string
+	StrLogRaw  string
 }
 
 func Tail(site, filename string, out chan Canary) {
@@ -89,9 +100,6 @@ func Tail(site, filename string, out chan Canary) {
 
 func Parse(str string) Canary {
 
-	//7 method
-	//8 URI
-	//10 status code
 	//['ip'] =  [1];
 	//['identity'] =  [2];
 	//['user'] =  [3];
@@ -109,10 +117,21 @@ func Parse(str string) Canary {
 	re := regexp.MustCompile(`(\S+) (\S+) (\S+) \[([^:]+):(\d+:\d+:\d+) ([^\]]+)\] \"(\S+) (.*?) (\S+)\" (\S+) (\S+) (\".*?\") (\".*?\")`)
 	match := re.FindStringSubmatch(str)
 
+	status, _ := strconv.Atoi(match[10])
 	return Canary{
+		Ip:         match[1],
+		Identity:   match[2],
+		User:       match[3],
+		Date:       match[4],
+		Time:       match[5],
+		Timezone:   match[6],
 		Method:     match[7],
 		URI:        match[8],
-		StatusCode: match[10],
-		StrLog:     str,
+		Protocol:   match[9],
+		StatusCode: status,
+		Bytes:      match[11],
+		Referer:    match[12],
+		Agent:      match[13],
+		StrLogRaw:  str,
 	}
 }

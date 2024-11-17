@@ -3,19 +3,27 @@ package sendler
 import (
 	"main/internal/config"
 	"main/internal/logger"
+	"main/internal/messages"
 	"net/http"
 	"net/url"
 	"strings"
 )
 
-func SendServer(message string) {
+func SendServer(site, message string) {
 	if config.Server != "" {
-		request, err := http.NewRequest(http.MethodPost, config.Server, strings.NewReader(message))
-		if err != nil {
-			return
+		m := messages.Message{
+			Site: site,
+			Log:  message,
 		}
-
-		client := &http.Client{}
+		reqBody, err := m.Encode()
+		if err != nil {
+			logger.SendError(err)
+		}
+		request, err := http.NewRequest(http.MethodPost, "http://"+config.Server+"/canary", strings.NewReader(string(reqBody)))
+		if err != nil {
+			logger.SendError(err)
+		}
+		client := http.DefaultClient
 		response, err := client.Do(request)
 		if err != nil {
 			logger.SendError(err)
