@@ -48,7 +48,7 @@ func main() {
 
 	for {
 		str := <-ch
-		if str.StatusCode == http.StatusOK || str.StatusCode == http.StatusMovedPermanently {
+		if str.StatusCode == http.StatusOK || str.StatusCode == http.StatusMovedPermanently || str.StatusCode == http.StatusNotModified {
 			continue
 		}
 
