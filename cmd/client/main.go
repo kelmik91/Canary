@@ -12,7 +12,7 @@ import (
 func main() {
 	config.Config()
 
-	glob, err := filepath.Glob(config.LogPath + "*" + config.LogFileName)
+	files, err := filepath.Glob(config.LogPath + "*" + config.LogFileName)
 	//glob, err := filepath.Glob("bin/" + "*" + config.LogFileName)
 	if err != nil {
 		log.Fatalln(err)
@@ -28,7 +28,7 @@ func main() {
 		"twc1.net",
 	}
 
-	for _, s := range glob {
+	for _, s := range files {
 
 		found := true
 		for _, substr := range allowedSubstrings {
@@ -46,9 +46,11 @@ func main() {
 	}
 
 	for {
-		str := <-ch
-		if str.StatusCode >= 500 && str.StatusCode < 600 || str.StatusCode == 404 {
-			sendler.Send(str.Site, str.StrLogRaw)
+		strParse := <-ch
+		if strParse.StatusCode >= 500 && strParse.StatusCode < 600 || strParse.StatusCode == 404 {
+			if len(strParse.Agent) > 3 && !strings.Contains(strParse.Agent, "bot") {
+				sendler.Send(strParse.Site, strParse.StrLogRaw)
+			}
 		}
 	}
 
