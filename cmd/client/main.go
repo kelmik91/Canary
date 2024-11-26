@@ -5,7 +5,6 @@ import (
 	"main/internal/canary"
 	"main/internal/config"
 	"main/internal/sendler"
-	"net/http"
 	"path/filepath"
 	"strings"
 )
@@ -48,14 +47,9 @@ func main() {
 
 	for {
 		str := <-ch
-		if str.StatusCode == http.StatusOK ||
-			str.StatusCode == http.StatusMovedPermanently ||
-			str.StatusCode == http.StatusNotModified ||
-			str.StatusCode == http.StatusForbidden {
-			continue
+		if str.StatusCode >= 500 && str.StatusCode < 600 || str.StatusCode == 404 {
+			sendler.Send(str.Site, str.StrLogRaw)
 		}
-
-		sendler.SendServer(str.Site, str.StrLogRaw)
 	}
 
 }

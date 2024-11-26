@@ -9,27 +9,31 @@ import (
 	"strings"
 )
 
-func SendServer(site, message string) {
+func sendServer(site, message string) {
+	m := messages.Message{
+		Site: site,
+		Log:  message,
+	}
+	reqBody, err := m.Encode()
+	if err != nil {
+		logger.SendError(err)
+	}
+	request, err := http.NewRequest(http.MethodPost, "http://"+config.Server+"/canary", strings.NewReader(string(reqBody)))
+	if err != nil {
+		logger.SendError(err)
+	}
+	client := http.DefaultClient
+	response, err := client.Do(request)
+	if err != nil {
+		logger.SendError(err)
+		SendTg(site + " : " + message)
+	}
+	defer response.Body.Close()
+}
+
+func Send(site, message string) {
 	if config.Server != "" {
-		m := messages.Message{
-			Site: site,
-			Log:  message,
-		}
-		reqBody, err := m.Encode()
-		if err != nil {
-			logger.SendError(err)
-		}
-		request, err := http.NewRequest(http.MethodPost, "http://"+config.Server+"/canary", strings.NewReader(string(reqBody)))
-		if err != nil {
-			logger.SendError(err)
-		}
-		client := http.DefaultClient
-		response, err := client.Do(request)
-		if err != nil {
-			logger.SendError(err)
-			SendTg(site + " : " + message)
-		}
-		defer response.Body.Close()
+		sendServer(site, message)
 	} else {
 		SendTg(site + " : " + message)
 	}
