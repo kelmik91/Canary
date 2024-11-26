@@ -12,7 +12,8 @@ import (
 )
 
 type Canary struct {
-	Site       string
+	Site string
+	//Ip адрес посетителя
 	Ip         string
 	Identity   string
 	User       string
@@ -25,8 +26,9 @@ type Canary struct {
 	StatusCode int
 	Bytes      string
 	Referer    string
-	Agent      string
-	StrLogRaw  string
+	//user-agent посетителя
+	Agent     string
+	StrLogRaw string
 }
 
 func Tail(site, filename string, out chan Canary) {
