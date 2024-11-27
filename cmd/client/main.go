@@ -47,7 +47,7 @@ func main() {
 
 	for {
 		strParse := <-ch
-		if strParse.StatusCode >= 500 && strParse.StatusCode < 600 || strParse.StatusCode == 404 {
+		if strParse.StatusCode >= 500 && strParse.StatusCode < 600 {
 			if len(strParse.Agent) > 3 && !strings.Contains(strParse.Agent, "bot") {
 				sendler.Send(strParse.Site, strParse.StrLogRaw)
 			}
